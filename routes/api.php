@@ -17,11 +17,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => 'auth:api'], function()
+{
+  
 Route::post('news','NewsController@store');
 Route::get('news','NewsController@index');
 Route::get('news/{id}','NewsController@show');
 Route::post('news/{id}','NewsController@update');
 
 Route::delete('news/{id}','NewsController@destroy');
+
+});
+
+
 
 

@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Requests\NewsRequest;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\News;
+use App\User;
+
+
+
 use App\Http\Resources\News as NewsResource;
 
 
 class NewsController extends Controller
 {
+    
+
+
     /**
      * Display a listing of the resource.
      *
@@ -18,10 +25,15 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::paginate(15);
-
        
-        return NewsResource::collection($news);
+        try{
+         $news = News::paginate(15);
+         return NewsResource::collection($news);
+
+        } catch(\Exception $e){
+            return "No Records Found";
+        }
+        
     }
 
     /**
@@ -32,28 +44,35 @@ class NewsController extends Controller
      */
     public function store(NewsRequest $request)
     {
-       
-       
+        
 
+        
+       try{
         $news =  new News;
-        $news->id = $request->input('id');
+        
         $news->title = $request->input('title');
         $news->header = $request->input('header');
         $news->description = $request->input('description');
-        
+        $user = auth()->user()->id;
+        $news->news_created = $user; 
         $file = $request->file('photo');
         $filename = $file->getClientOriginalName();
         $path = public_path().'/uploads/';
         $url=$file->move($path, $filename);
         $news->file_url=url($url.$filename);
       
-        
+       
 
 
 
         if($news->save()) {
        
             return new NewsResource($news);
+       }
+       }catch(\Exception $e){
+        return "Record not Created";
+
+       
         }
     }
 
@@ -65,10 +84,13 @@ class NewsController extends Controller
      */
     public function show($id)
     {
-        $news = News::findOrFail($id);
-
-        
-        return new NewsResource($news);
+        try {
+            $news = News::findOrFail($id); 
+            return new NewsResource($news);
+        } catch(\Exception $e){
+            return "Not Found";
+        }
+       
     }
 
     /**
@@ -91,21 +113,28 @@ class NewsController extends Controller
      */
     public function update(NewsRequest $request, $id)
     {
+
+        try{
+
         $news = News::find($id);
-        $news->id = $request->input('id');
         $news->title = $request->input('title');
         $news->header = $request->input('header');
         $news->description = $request->input('description');
-        
+        $user = auth()->user()->id;
+        $news->news_created = $user; 
         $file = $request->file('photo');
         $filename = $file->getClientOriginalName();
         $path = public_path().'/uploads/';
         $url=$file->move($path, $filename);
         $news->file_url=url($url.$filename);
+        if($news->save()) {
        
-        $news->save();
-
-        return new NewsResource($news);
+            return new NewsResource($news);
+       }
+        }catch(\Exception $e){
+            return "Record not Updated";
+        }
+        
 
     }
 
@@ -117,11 +146,15 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-         
-         $news = News::findOrFail($id);
+         try{
+            $news = News::findOrFail($id);
 
-         if($news->delete()) {
-             return new NewsResource($news);
+            if($news->delete()) {
+                return new NewsResource($news);
+            }
+         }catch(\Exception $e){
+             return "Record Not Deleted";
          }
+        
     }
 }

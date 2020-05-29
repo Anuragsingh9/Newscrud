@@ -15,11 +15,11 @@ class CreateNewsTable extends Migration
     {
         Schema::create('news', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('title');
-            $table->text('header');
+            $table->integer('news_created')->unsigned()->user();
+            $table->foreign('news_created')->references('id')->on('users');
+            $table->string('title',80);
+            $table->string('header',100);
             $table->text('description');
-            $table->text('filename');
-            $table->text('path');
             $table->text('file_url');
 
 
