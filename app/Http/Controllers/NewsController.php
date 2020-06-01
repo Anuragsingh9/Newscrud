@@ -31,7 +31,8 @@ class NewsController extends Controller
          return NewsResource::collection($news);
 
         } catch(\Exception $e){
-            return "No Records Found";
+            return response()->json(['status' => false, 'message' => 'No Record Found']);
+            
         }
         
     }
@@ -70,8 +71,7 @@ class NewsController extends Controller
             return new NewsResource($news);
        }
        }catch(\Exception $e){
-        return "Record not Created";
-
+        return response()->json(['status' => false, 'message' => 'Record not Created']);
        
         }
     }
@@ -88,7 +88,8 @@ class NewsController extends Controller
             $news = News::findOrFail($id); 
             return new NewsResource($news);
         } catch(\Exception $e){
-            return "Not Found";
+        return response()->json(['status' => false, 'message' => 'No Matching Record Found']);
+
         }
        
     }
@@ -132,7 +133,8 @@ class NewsController extends Controller
             return new NewsResource($news);
        }
         }catch(\Exception $e){
-            return "Record not Updated";
+        return response()->json(['status' => false, 'message' => 'Record Not Updated']);
+
         }
         
 
@@ -153,7 +155,8 @@ class NewsController extends Controller
                 return new NewsResource($news);
             }
          }catch(\Exception $e){
-             return "Record Not Deleted";
+        return response()->json(['status' => false, 'message' => 'No Record Found']);
+
          }
         
     }
