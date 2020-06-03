@@ -148,9 +148,11 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-         try{
-            $news = News::findOrFail($id);
 
+         try{
+             
+            $news = News::findOrFail($id);
+            
             if($news->delete()) {
                 return new NewsResource($news);
             }

@@ -24,8 +24,13 @@ Route::post('news','NewsController@store');
 Route::get('news','NewsController@index');
 Route::get('news/{id}','NewsController@show');
 Route::post('news/{id}','NewsController@update');
-
 Route::delete('news/{id}','NewsController@destroy');
+
+Route::post('news/{id}/review','ReviewController@save');
+Route::get('news/{id}/review','ReviewController@show');
+Route::post('news/review/{id}','ReviewController@update');
+Route::delete('news/review/{id}','ReviewController@destroy');
+
 
 });
 
