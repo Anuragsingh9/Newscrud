@@ -18,7 +18,7 @@ class CreateReviewsTable extends Migration
             $table->integer('news_id')->unsigned()->index();
             $table->foreign('news_id')->references('id')->on('news');
             $table->string('rating',80);
-            $table->text('review');
+            $table->text('review')->nullable();
 
             $table->timestamps();
         });
