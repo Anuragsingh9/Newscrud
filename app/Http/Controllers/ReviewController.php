@@ -37,7 +37,13 @@ class ReviewController extends Controller
         try {
             $user=Auth::user()->id;
             $review = Review::select('*')->where('news_id','=',$id)->where('user_id','=',Auth::user()->id)->first();
-            return new ReviewResource($review);
+            if($review!=null){
+                return new ReviewResource($review);
+
+            }else{
+            return response()->json(['status' => false, 'message' => 'No Matching Record Found']);
+
+            }
         } catch(\Exception $e){
             return response()->json(['status' => false, 'message' => 'No Matching Record Found']);
 
@@ -63,9 +69,12 @@ class ReviewController extends Controller
     public function destroy($id){
         try{
             $review = Review::where('news_id','=',$id)->where('user_id','=',Auth::user()->id)->first();
-
-            if($review->delete()) {
+            if($review!=null){
+                 $review->delete();
                 return new ReviewResource($review);
+            }else{
+            return response()->json(['status' => false, 'message' => 'No Matching Record Found']);
+
             }
          }catch(\Exception $e){
                 return response()->json(['status' => false, 'message' => 'No Record Found']);
